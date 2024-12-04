@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { useAppKitProvider, useAppKitAccount } from "@reown/appkit/react";
 import { Contract, ethers } from "ethers";
-
+import { toast } from "react-toastify";
 import abi from "../ABI/abi.json";
 
 const TokenAddress = "0xEC520AF7c246026327467070b029b29a59922C9F";
@@ -12,6 +12,7 @@ const Mint = () => {
   const [amount, setAmount] = React.useState(0);
   const [balance, setBalance] = React.useState(0);
   const [userAddress, setUserAddress] = React.useState("");
+  const [recipientAddress, setRecipientAddress] = useState("");
 
   async function mint() {
     if (!isConnected) throw Error("User disconnected");
@@ -38,10 +39,32 @@ const Mint = () => {
     const TokenContract = new Contract(TokenAddress, abi, signer);
     const TokanBal = await TokenContract.balanceOf(address);
 
-    // Convert the balance using formatEther (assuming 18 decimals)
     const formattedBalance = ethers.utils.formatEther(TokanBal);
     setBalance(formattedBalance); // Update state with formatted balance
     console.log("Balance:", formattedBalance); // Log formatted balance
+  };
+
+  const transferTokens = async () => {
+    if (!isConnected) throw Error("User disconnected");
+
+    const ethersProvider = new ethers.providers.Web3Provider(walletProvider);
+    const signer = await ethersProvider.getSigner();
+    const TokenContract = new Contract(TokenAddress, abi, signer);
+
+    try {
+      const gasLimit = 90000000;
+
+      const tx = await TokenContract.transfer(
+        recipientAddress,
+        ethers.utils.parseUnits(amount, 18),
+        { gasLimit: gasLimit }
+      );
+
+      await tx.wait();
+      toast.success(`Transferred ${amount} BTC to ${recipientAddress}`);
+    } catch (error) {
+      toast.error("Transfer failed: " + error.message);
+    }
   };
 
   return (
@@ -63,6 +86,19 @@ const Mint = () => {
       />
       <button onClick={getBalance}>Get Balance</button>
       <p>Balance: {balance}</p>
+      <h2>Transfer Tokens</h2>
+      <input
+        type="text"
+        placeholder="Recipient Address"
+        value={recipientAddress}
+        onChange={(e) => setRecipientAddress(e.target.value)}
+      />
+      <input
+        type="number"
+        placeholder="Amount to Transfer"
+        onChange={(e) => setAmount(e.target.value)}
+      />
+      <button onClick={transferTokens}>Transfer Tokens</button>
     </div>
   );
 };
