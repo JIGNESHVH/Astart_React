@@ -1,10 +1,11 @@
 import "./App.css";
 import { createAppKit } from "@reown/appkit/react";
 import { Ethers5Adapter } from "@reown/appkit-adapter-ethers5";
-import { astarZkyoto, astarZkEVM } from "@reown/appkit/networks";
+import { astarZkyoto } from "@reown/appkit/networks";
 import Connect from "../src/walletConnect";
 import Mint from "./component/mint";
 import { ToastContainer } from "react-toastify";
+import Transfer from "./component/transfer";
 function App() {
   const projectId = "458097e6aff495fbf19f2ba2fb4fc80c";
 
@@ -30,6 +31,7 @@ function App() {
     <>
       <Connect />
       <Mint />
+      <Transfer />
       <ToastContainer />
     </>
   );

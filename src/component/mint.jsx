@@ -44,28 +44,38 @@ const Mint = () => {
     console.log("Balance:", formattedBalance); // Log formatted balance
   };
 
-  const transferTokens = async () => {
-    if (!isConnected) throw Error("User disconnected");
+  // const transferTokens = async () => {
+  //   if (!isConnected) throw Error("User disconnected");
 
-    const ethersProvider = new ethers.providers.Web3Provider(walletProvider);
-    const signer = await ethersProvider.getSigner();
-    const TokenContract = new Contract(TokenAddress, abi, signer);
+  //   const ethersProvider = new ethers.providers.Web3Provider(walletProvider);
+  //   const signer = await ethersProvider.getSigner();
+  //   const TokenContract = new Contract(TokenAddress, abi, signer);
 
-    try {
-      const gasLimit = 90000000;
+  //   try {
+  //     console.log(amount, "amount");
+  //     const approve = await TokenContract.approve(
+  //       "0xC617cc5159Aa5a7451106B837Ffc87B9Ad3b4EC5",
+  //       amount,
+  //       {
+  //         gasLimit: ethers.utils.hexlify(100000),
+  //       }
+  //     );
+  //     await approve.wait();
+  //   } catch (error) {
+  //     console.log("error in approval", error);
+  //   }
+  //   try {
+  //     const tx = await TokenContract.transfer(
+  //       recipientAddress,
+  //       ethers.utils.parseUnits(amount, 18)
+  //     );
 
-      const tx = await TokenContract.transfer(
-        recipientAddress,
-        ethers.utils.parseUnits(amount, 18),
-        { gasLimit: gasLimit }
-      );
-
-      await tx.wait();
-      toast.success(`Transferred ${amount} BTC to ${recipientAddress}`);
-    } catch (error) {
-      toast.error("Transfer failed: " + error.message);
-    }
-  };
+  //     await tx.wait();
+  //     toast.success(`Transferred ${amount} BTC to ${recipientAddress}`);
+  //   } catch (error) {
+  //     toast.error("Transfer failed: " + error.message);
+  //   }
+  // };
 
   return (
     <div>
@@ -86,7 +96,7 @@ const Mint = () => {
       />
       <button onClick={getBalance}>Get Balance</button>
       <p>Balance: {balance}</p>
-      <h2>Transfer Tokens</h2>
+      {/* <h2>Transfer Tokens</h2>
       <input
         type="text"
         placeholder="Recipient Address"
@@ -98,7 +108,7 @@ const Mint = () => {
         placeholder="Amount to Transfer"
         onChange={(e) => setAmount(e.target.value)}
       />
-      <button onClick={transferTokens}>Transfer Tokens</button>
+      <button onClick={transferTokens}>Transfer Tokens</button> */}
     </div>
   );
 };
